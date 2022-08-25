@@ -117,3 +117,16 @@ BEGIN
 	UPDATE cd SET qtde = qtde + OLD.qtde WHERE codcd = OLD.codcd;
 END$$
 DELIMITER ;
+
+-- Trigger de Inclusão de log, alterações na tabela autor
+DROP TRIGGER IF EXISTS `cd`.`autor_AFTER_UPDATE`;
+
+DELIMITER $$
+USE `cd`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `cd`.`autor_AFTER_UPDATE` AFTER UPDATE ON `autor` FOR EACH ROW
+BEGIN
+	DECLARE usuario VARCHAR (60);
+    SELECT CURRENT_USER() INTO usuario;
+    INSERT INTO log VALUES (null, usuario, OLD.nomeaut, NEW.nomeaut);
+END$$
+DELIMITER ;
