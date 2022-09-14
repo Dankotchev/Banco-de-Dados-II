@@ -2,7 +2,7 @@
 
 Você foi contemplado com uma locadora de filmes de presente, porem a mesma não tem nenhum tipo de software para controle, utiliza atualmente somente fichas.
 Monte uma base de dados que permita a você gerenciar o controle da locadora. A mesma deve conter os filmes, as mídias, quais locações foram feitas por um cliente, quais foram pagas, os gêneros do filmes e reservas de um determinado cliente.
-Faça os seguintes relatórios:
+**Faça os seguintes relatórios:**
 
 - Gere consultas para todos os filmes de um determinado gênero;
 - Todos os filmes locados por um determinado cliente;
@@ -12,7 +12,7 @@ Faça os seguintes relatórios:
 
 ## Diagrama 
 
-<img src="/home/daniloquirino/Imagens/ScreenShots/screenshot_2022-08-09_14-36-58.png" alt="Diagrama do modelo do banco de dados da locadora" style="zoom:200%;" />
+<img src="https://images2.imgbox.com/4c/08/G3RocSXi_o.png" alt="Diagrama do modelo do banco de dados da locadora" style="zoom:200%;" />
 
 ```sql
 
