@@ -16,7 +16,7 @@ Crie uma modelagem para atender o problema. Especifique os atributos de cada ent
 
   ## Modelagem
 
-  <img src="/home/daniloquirino/Imagens/modelagem_clinica.png" alt="Modelagem" style="zoom: 200%;" />
+  <img src="https://images2.imgbox.com/66/d6/qUeXLu8B_o.png" alt="Modelagem" style="zoom: 200%;" />
 
 ## Script
 
