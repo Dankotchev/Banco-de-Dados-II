@@ -1,6 +1,9 @@
 *.bak
 *.pdf
 *.png
+*.rar
+*.7z
+*.zip
 CD: Consultas.md
 Cidade: Consulta de Banco de Dados.md
 Clinica Dentista: Modelagem e Consultas de Banco de Dados.md
