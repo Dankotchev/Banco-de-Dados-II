@@ -1,6 +1,6 @@
 SET search_path TO professores;
 
-INSERT INTO professores (nome) VALUES
+INSERT INTO professor (nome) VALUES
 ('Vilson'), ('Ricardo F'), ('Andrea'), ('Melissa'), ('Paulo Rosa');
 
 INSERT INTO integrado VALUES
@@ -21,8 +21,8 @@ SELECT * FROM outros;
 
 -- Insersão de aulas com professores que não estão cadastrados ainda
 INSERT INTO integrado VALUES
-(1, 'xxx-1', 'Disciplina x1', 2, 1, 'Cláudio', null),
-(2, 'xxx-2', 'Disciplina x2', 4, 2, 'César', 'Bruno');
+(1, 'HSO-1', 'Hardware e Sistemas Operacionais', 2, 1, 'Cláudio', null),
+(2, 'BND-2', 'Banco de Dados', 4, 2, 'César', 'Bruno');
 
 INSERT INTO bcc VALUES
 (1, 'IMPAR', 'ICCC1', 'Introdução a Ciência da Computação', 'Informática', 2, 1, 'Kleber', null),

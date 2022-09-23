@@ -4,7 +4,7 @@ SET search_path TO professores;
 CREATE TABLE professor(
 	nome 			VARCHAR(60),
 	semestre_par	INT	DEFAULT 0,
-	semestre_impar	INT DEFAULT 0
+	semestre_impar	INT DEFAULT 0,
 	PRIMARY KEY (nome)
 );
 
@@ -55,7 +55,7 @@ CREATE TABLE outros (
 CREATE OR REPLACE FUNCTION f_verificar_professor(chave VARCHAR(60))
 RETURNS VARCHAR(60) AS $$
 DECLARE
-	prof 	VARCHAR(60),
+	prof 	VARCHAR(60);
 BEGIN
 	SELECT nome INTO prof FROM professor WHERE nome = chave;
 	RETURN prof;
@@ -70,7 +70,7 @@ $$ LANGUAGE 'plpgsql';
 CREATE OR REPLACE FUNCTION f_professores_integrado()
 RETURNS TRIGGER AS $$
 DECLARE
-	prof 	VARCHAR(60),
+	prof 	VARCHAR(60);
 BEGIN
 	IF (TG_OP = 'INSERT' OR TG_OP = 'UPDATE') THEN
 		IF (NEW.n_professores = 2) THEN
@@ -91,17 +91,17 @@ BEGIN
 END;
 $$ LANGUAGE 'plpgsql';
 
-CREATE TRIGGER f_professores_integrado
+CREATE TRIGGER t_professores_integrado
 BEFORE INSERT OR UPDATE ON integrado
 FOR EACH ROW EXECUTE PROCEDURE f_professores_integrado();
 -- ----------------------------------------------------------------------------
 
 -- INTEGRADO
 -- TRIGGER: Atualiza o total de aulas de cada professor
-CREATE OR REPLACE FUNCTION f_aula_integrado()
+CREATE OR REPLACE FUNCTION f_aulas_integrado()
 RETURNS TRIGGER AS $$
 DECLARE
-	prof 	VARCHAR(60),
+	prof 	VARCHAR(60);
 BEGIN
 	IF (TG_OP = 'INSERT') THEN
 		IF (NEW.n_professores = 2) THEN
@@ -133,19 +133,19 @@ BEGIN
 		IF (NEW.n_professores = 2) THEN
 			UPDATE professor SET semestre_par = semestre_par - OLD.aulas,
 				semestre_impar = semestre_impar - OLD.aulas
-				WHERE nome = NEW.prof2;
+				WHERE nome = OLD.prof2;
 		END IF;
 
 		UPDATE professor SET semestre_par = semestre_par - OLD.aulas,
 				semestre_impar = semestre_impar - OLD.aulas
-				WHERE nome = NEW.prof1;
+				WHERE nome = OLD.prof1;
 	RETURN OLD;
 	END IF;
 
 END;
 $$ LANGUAGE 'plpgsql';
 
-CREATE TRIGGER f_aulas_integrado
+CREATE TRIGGER t_aulas_integrado
 AFTER INSERT OR UPDATE OR DELETE ON integrado
 FOR EACH ROW EXECUTE PROCEDURE f_aulas_integrado();
 -- ----------------------------------------------------------------------------
@@ -156,7 +156,7 @@ FOR EACH ROW EXECUTE PROCEDURE f_aulas_integrado();
 CREATE OR REPLACE FUNCTION f_professores_bcc()
 RETURNS TRIGGER AS $$
 DECLARE
-	prof 	VARCHAR(60),
+	prof 	VARCHAR(60);
 BEGIN
 	IF (TG_OP = 'INSERT' OR TG_OP = 'UPDATE') THEN
 		IF (NEW.n_professores = 2) THEN
@@ -177,17 +177,17 @@ BEGIN
 END;
 $$ LANGUAGE 'plpgsql';
 
-CREATE TRIGGER f_professores_bcc
+CREATE TRIGGER t_professores_bcc
 BEFORE INSERT OR UPDATE ON bcc
 FOR EACH ROW EXECUTE PROCEDURE f_professores_bcc();
 -- ----------------------------------------------------------------------------
 
 -- BCC
 -- TRIGGER: Atualiza o total de aulas de cada professor
-CREATE OR REPLACE FUNCTION f_aula_bcc()
+CREATE OR REPLACE FUNCTION f_aulas_bcc()
 RETURNS TRIGGER AS $$
 DECLARE
-	prof 	VARCHAR(60),
+	prof 	VARCHAR(60);
 BEGIN
 	IF (TG_OP = 'INSERT') THEN
 		IF (NEW.n_professores = 2) THEN
@@ -195,7 +195,7 @@ BEGIN
 				UPDATE professor SET semestre_par = semestre_par + NEW.aulas
 					WHERE nome = NEW.prof2;
 			ELSE
-				UPDATE professor SET semestre_impar = semestre_impar + NEW.aulas,
+				UPDATE professor SET semestre_impar = semestre_impar + NEW.aulas
 					WHERE nome = NEW.prof2;
 			END IF;
 		END IF;
@@ -204,7 +204,7 @@ BEGIN
 			UPDATE professor SET semestre_par = semestre_par + NEW.aulas
 				WHERE nome = NEW.prof1;
 		ELSE
-			UPDATE professor SET semestre_impar = semestre_impar + NEW.aulas,
+			UPDATE professor SET semestre_impar = semestre_impar + NEW.aulas
 				WHERE nome = NEW.prof1;
 		END IF;
 	RETURN NEW;
@@ -225,7 +225,7 @@ BEGIN
 			UPDATE professor SET semestre_par = semestre_par + NEW.aulas - OLD.aulas
 				WHERE nome = NEW.prof1;
 		ELSE
-			UPDATE professor SET semestre_impar = semestre_impar + NEW.aulas - OLD.aulas,
+			UPDATE professor SET semestre_impar = semestre_impar + NEW.aulas - OLD.aulas
 				WHERE nome = NEW.prof1;
 		END IF;
 
@@ -236,19 +236,19 @@ BEGIN
 		IF (NEW.n_professores = 2) THEN
 			IF (NEW.semestre = 'PAR') THEN
 				UPDATE professor SET semestre_par = semestre_par - OLD.aulas
-					WHERE nome = NEW.prof2;
+					WHERE nome = OLD.prof2;
 			ELSE
 				UPDATE professor SET semestre_impar = semestre_impar - OLD.aulas
-					WHERE nome = NEW.prof2;
+					WHERE nome = OLD.prof2;
 			END IF;		
 		END IF;
 
 		IF (NEW.semestre = 'PAR') THEN
 			UPDATE professor SET semestre_par = semestre_par - OLD.aulas
-				WHERE nome = NEW.prof1;
+				WHERE nome = OLD.prof1;
 		ELSE
-			UPDATE professor SET semestre_impar = semestre_impar - OLD.aulas,
-				WHERE nome = NEW.prof1;
+			UPDATE professor SET semestre_impar = semestre_impar - OLD.aulas
+				WHERE nome = OLD.prof1;
 		END IF;
 	RETURN NEW;
 	END IF;
@@ -256,7 +256,7 @@ BEGIN
 END;
 $$ LANGUAGE 'plpgsql';
 
-CREATE TRIGGER f_aulas_bcc
+CREATE TRIGGER t_aulas_bcc
 AFTER INSERT OR UPDATE OR DELETE ON bcc
 FOR EACH ROW EXECUTE PROCEDURE f_aulas_bcc();
 -- ----------------------------------------------------------------------------
@@ -267,7 +267,7 @@ FOR EACH ROW EXECUTE PROCEDURE f_aulas_bcc();
 CREATE OR REPLACE FUNCTION f_professores_outros()
 RETURNS TRIGGER AS $$
 DECLARE
-	prof 	VARCHAR(60),
+	prof 	VARCHAR(60);
 BEGIN
 	IF (TG_OP = 'INSERT' OR TG_OP = 'UPDATE') THEN
 		IF (NEW.n_professores = 2) THEN
@@ -288,17 +288,17 @@ BEGIN
 END;
 $$ LANGUAGE 'plpgsql';
 
-CREATE TRIGGER f_professores_outros
+CREATE TRIGGER t_professores_outros
 BEFORE INSERT OR UPDATE ON outros
 FOR EACH ROW EXECUTE PROCEDURE f_professores_outros();
 -- ----------------------------------------------------------------------------
 
 -- OUTROS
 -- TRIGGER: Atualiza o total de aulas de cada professor
-CREATE OR REPLACE FUNCTION f_aula_outros()
+CREATE OR REPLACE FUNCTION f_aulas_outros()
 RETURNS TRIGGER AS $$
 DECLARE
-	prof 	VARCHAR(60),
+	prof 	VARCHAR(60);
 BEGIN
 	IF (TG_OP = 'INSERT') THEN
 		IF (NEW.n_professores = 2) THEN
@@ -306,7 +306,7 @@ BEGIN
 				UPDATE professor SET semestre_par = semestre_par + NEW.aulas
 					WHERE nome = NEW.prof2;
 			ELSE
-				UPDATE professor SET semestre_impar = semestre_impar + NEW.aulas,
+				UPDATE professor SET semestre_impar = semestre_impar + NEW.aulas
 					WHERE nome = NEW.prof2;
 			END IF;
 		END IF;
@@ -315,7 +315,7 @@ BEGIN
 			UPDATE professor SET semestre_par = semestre_par + NEW.aulas
 				WHERE nome = NEW.prof1;
 		ELSE
-			UPDATE professor SET semestre_impar = semestre_impar + NEW.aulas,
+			UPDATE professor SET semestre_impar = semestre_impar + NEW.aulas
 				WHERE nome = NEW.prof1;
 		END IF;
 	RETURN NEW;
@@ -336,7 +336,7 @@ BEGIN
 			UPDATE professor SET semestre_par = semestre_par + NEW.aulas - OLD.aulas
 				WHERE nome = NEW.prof1;
 		ELSE
-			UPDATE professor SET semestre_impar = semestre_impar + NEW.aulas - OLD.aulas,
+			UPDATE professor SET semestre_impar = semestre_impar + NEW.aulas - OLD.aulas
 				WHERE nome = NEW.prof1;
 		END IF;
 
@@ -347,19 +347,19 @@ BEGIN
 		IF (NEW.n_professores = 2) THEN
 			IF (NEW.semestre = 'PAR') THEN
 				UPDATE professor SET semestre_par = semestre_par - OLD.aulas
-					WHERE nome = NEW.prof2;
+					WHERE nome = OLD.prof2;
 			ELSE
 				UPDATE professor SET semestre_impar = semestre_impar - OLD.aulas
-					WHERE nome = NEW.prof2;
+					WHERE nome = OLD.prof2;
 			END IF;		
 		END IF;
 
 		IF (NEW.semestre = 'PAR') THEN
 			UPDATE professor SET semestre_par = semestre_par - OLD.aulas
-				WHERE nome = NEW.prof1;
+				WHERE nome = OLD.prof1;
 		ELSE
-			UPDATE professor SET semestre_impar = semestre_impar - OLD.aulas,
-				WHERE nome = NEW.prof1;
+			UPDATE professor SET semestre_impar = semestre_impar - OLD.aulas
+				WHERE nome = OLD.prof1;
 		END IF;
 	RETURN NEW;
 	END IF;
@@ -367,7 +367,7 @@ BEGIN
 END;
 $$ LANGUAGE 'plpgsql';
 
-CREATE TRIGGER f_aulas_outros
+CREATE TRIGGER t_aulas_outros
 AFTER INSERT OR UPDATE OR DELETE ON outros
 FOR EACH ROW EXECUTE PROCEDURE f_aulas_outros();
 -- ----------------------------------------------------------------------------
