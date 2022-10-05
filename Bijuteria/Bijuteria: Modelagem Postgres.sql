@@ -1,14 +1,14 @@
 CREATE SCHEMA bijuteria;
 SET search_path TO bijuteria;
 
-CREATE TABLE IF NOT EXISTS curso (
+CREATE TABLE curso (
     idcurso     SERIAL,
     nome        VARCHAR(60) NULL,
     descricao   VARCHAR(255) NULL,
     PRIMARY KEY (idcurso)
 );
 
-CREATE TABLE IF NOT EXISTS turma (
+CREATE TABLE turma (
     idturma         SERIAL,
     curso_idcurso   INT NOT NULL,
     ano             INT NOT NULL,
@@ -17,13 +17,14 @@ CREATE TABLE IF NOT EXISTS turma (
     FOREIGN KEY (curso_idcurso) REFERENCES curso (idcurso)
 );
 
-CREATE TABLE IF NOT EXISTS materia (
+CREATE TABLE materia (
     idmateria           SERIAL,
     nome                VARCHAR(100),
     carga_horaria       INT,
     PRIMARY KEY (idmateria)
 );
-CREATE TABLE IF NOT EXISTS participante (
+
+CREATE TABLE participante (
     idparticipante      SERIAL,
     cpf                 VARCHAR(16),
     nome                VARCHAR(60),
@@ -32,7 +33,7 @@ CREATE TABLE IF NOT EXISTS participante (
     PRIMARY KEY (idparticipante)
 );
 
-CREATE TABLE IF NOT EXISTS matricula (
+CREATE TABLE matricula (
     idmatricula                     SERIAL,
     participante_idparticipante     INT NOT NULL,
     turma_idturma                   INT NOT NULL,
@@ -42,7 +43,7 @@ CREATE TABLE IF NOT EXISTS matricula (
     FOREIGN KEY (turma_idturma)                 REFERENCES turma (idturma)
 );
 
-CREATE TABLE IF NOT EXISTS caixa (
+CREATE TABLE caixa (
     data_caixa  DATE NOT NULL,
     abertura    DECIMAL(10,2) NULL,
     entradas    DECIMAL(10,2) NULL,
@@ -50,7 +51,7 @@ CREATE TABLE IF NOT EXISTS caixa (
     PRIMARY KEY (data_caixa)
 );
 
-CREATE TABLE IF NOT EXISTS pagamentos (
+CREATE TABLE pagamentos (
     matricula_idmatricula   INT NOT NULL,
     parcela                 INT NOT NULL,
     data_vencimento         DATE,
@@ -60,14 +61,14 @@ CREATE TABLE IF NOT EXISTS pagamentos (
     FOREIGN KEY (caixa_data_pagamento)      REFERENCES caixa (data_caixa)
 );
 
-CREATE TABLE IF NOT EXISTS curso_tem_materia (
+CREATE TABLE curso_tem_materia (
     curso_idcurso           INT NOT NULL,
     materia_idmateria       INT NOT NULL,
     FOREIGN KEY (curso_idcurso)         REFERENCES curso (idcurso),
     FOREIGN KEY (materia_idmateria)     REFERENCES materia (idmateria)
 );
 
-CREATE TABLE IF NOT EXISTS gastos (
+CREATE TABLE gastos (
     idgastos                SERIAL,
     turma_idturma           INT NOT NULL,
     decricao                VARCHAR(100),
@@ -78,7 +79,7 @@ CREATE TABLE IF NOT EXISTS gastos (
     FOREIGN KEY (caixa_data_ocorrencia)   REFERENCES caixa (data_caixa)
 );
 
-CREATE TABLE IF NOT EXISTS participante_faz_materia (
+CREATE TABLE participante_faz_materia (
     participante_idparticipante     INT NOT NULL,
     materia_idmateria               INT NOT NULL,
     nota1                           DECIMAL(4,2),

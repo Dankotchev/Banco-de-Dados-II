@@ -3,18 +3,18 @@ SET search_path TO bijuteria;
 
 CREATE TABLE curso (
 	idcurso 		SERIAL,
-	nomecurso 		VARCHAR(60),
-	totalhoras 		INT,
-	valordocurso 	DECIMAL(10,2),
+	nome_curso 		VARCHAR(60),
+	total_horas 	INT,
+	valor_curso 	DECIMAL(10,2),
 	PRIMARY KEY (idcurso)
 );
 
 CREATE TABLE turmas (
-	idcurso 		SERIAL,
-	idturmas 		INT,
-	horarioinicio 	TIME,
-	horariofim 		TIME,
-	totalaluno 		INT,
+	idturmas 		   SERIAL,
+	curso_idcurso      INT,
+	horario_inicio 	   TIME,
+	horario_fim        TIME,
+	total_aluno        INT,
 	PRIMARY KEY (idturmas),
 	FOREIGN KEY (idcurso)  REFERENCES curso (idcurso)
 );
@@ -57,7 +57,7 @@ CREATE TABLE matricula (
 CREATE TABLE caixa (
     data_caixa  DATE,
     abertura    DECIMAL(10,2),
-    entradas    DECIMAL(10,2),
+    entrada     DECIMAL(10,2),
     saida       DECIMAL(10,2),
     PRIMARY KEY (data_caixa)
 );
@@ -68,6 +68,7 @@ CREATE TABLE pagamentos (
     data_vencimento         DATE,
     caixa_data_pagamento    DATE,
     valor                   DECIMAL(10,2),
+    PRIMARY KEY (matricula_idmatricula, parcela),
     FOREIGN KEY (matricula_idmatricula)     REFERENCES matricula (idmatricula),
     FOREIGN KEY (caixa_data_pagamento)      REFERENCES caixa (data_caixa)
 );
@@ -77,14 +78,22 @@ CREATE TABLE gastos (
     turma_idturma           INT,
     decricao                VARCHAR(100),
     valor                   DECIMAL(10,2),
-    caixa_data_ocorrencia   DATE NULL,
+    caixa_data_gasto        DATE,
     PRIMARY KEY (idgastos),
     FOREIGN KEY (turma_idturma)           REFERENCES turma (idturma),
     FOREIGN KEY (caixa_data_ocorrencia)   REFERENCES caixa (data_caixa)
 );
 
-
-
-
-
-
+CREATE TABLE notas (
+    idnota                          SERIAL,
+    matricula_idmatricula           INT,
+    materia_idmateria               INT,
+    nota1                           DECIMAL(4,2) DEFAULT 0,
+    nota2                           DECIMAL(4,2) DEFAULT 0,
+    nota3                           DECIMAL(4,2) DEFAULT 0,
+    nota4                           DECIMAL(4,2) DEFAULT 0,
+    situacao                        VARCHAR(1),
+    PRIMARY KEY (idnota, materia_idmateria),
+    FOREIGN KEY (materia_idmateria) REFERENCES matricula (idmatricula),
+    FOREIGN KEY (materia_idmateria) REFERENCES materia (idmateria)
+);
