@@ -9,14 +9,14 @@ CREATE TABLE curso (
 	PRIMARY KEY (idcurso)
 );
 
-CREATE TABLE turmas (
-	idturmas 		   SERIAL,
+CREATE TABLE turma (
+	idturma 		   SERIAL,
 	curso_idcurso      INT,
 	horario_inicio 	   TIME,
 	horario_fim        TIME,
 	total_aluno        INT,
-	PRIMARY KEY (idturmas),
-	FOREIGN KEY (idcurso)  REFERENCES curso (idcurso)
+	PRIMARY KEY (idturma),
+	FOREIGN KEY (curso_idcurso)  REFERENCES curso (idcurso)
 );
 
 CREATE TABLE materia (
@@ -29,6 +29,7 @@ CREATE TABLE materia (
 CREATE TABLE curso_tem_materia (
     curso_idcurso           INT,
     materia_idmateria       INT,
+    PRIMARY KEY (curso_idcurso, materia_idmateria),
     FOREIGN KEY (curso_idcurso)         REFERENCES curso (idcurso),
     FOREIGN KEY (materia_idmateria)     REFERENCES materia (idmateria)
 );
@@ -49,7 +50,7 @@ CREATE TABLE matricula (
     turma_idturma                   INT,
     parcelas                        INT,
     situacao						VARCHAR(1),
-    PRIMARY KEY (idmatricula, participante_idparticipante, turma_idturma),
+    PRIMARY KEY (idmatricula),
     FOREIGN KEY (participante_idparticipante)   REFERENCES participante (idparticipante),
     FOREIGN KEY (turma_idturma)                 REFERENCES turma (idturma)
 );
@@ -59,6 +60,7 @@ CREATE TABLE caixa (
     abertura    DECIMAL(10,2),
     entrada     DECIMAL(10,2),
     saida       DECIMAL(10,2),
+    saldo       DECIMAL(10,2),
     PRIMARY KEY (data_caixa)
 );
 
@@ -81,7 +83,7 @@ CREATE TABLE gastos (
     caixa_data_gasto        DATE,
     PRIMARY KEY (idgastos),
     FOREIGN KEY (turma_idturma)           REFERENCES turma (idturma),
-    FOREIGN KEY (caixa_data_ocorrencia)   REFERENCES caixa (data_caixa)
+    FOREIGN KEY (caixa_data_gasto)   REFERENCES caixa (data_caixa)
 );
 
 CREATE TABLE notas (

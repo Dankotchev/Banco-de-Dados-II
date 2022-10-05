@@ -250,3 +250,6 @@ END $$
 CREATE TRIGGER t_efetuar_gastos BEFORE INSERT OR UPDATE OR DELETE ON gastos
 FOR EACH ROW EXECUTE PROCEDURE f_efetuar_gastos();
 
+-- 9	Crie uma VIEW que mostre as turmas, quanto já foi recebido até o momento em
+-- valor de cada aluno desta turma, e o total de despesa da turma
+
